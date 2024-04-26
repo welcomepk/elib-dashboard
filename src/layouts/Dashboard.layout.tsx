@@ -133,11 +133,13 @@ export default function DashboardLayout() {
                             <DropdownMenuItem>Support</DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem>
-                                <Link to="/login">Logout</Link>
+                                <Link to="/auth/login">Logout</Link>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </header>
+
+                {/* main section */}
                 <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
                     <Outlet />
                 </main>
