@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import {
     Card,
@@ -13,6 +13,11 @@ import { Label } from "@/components/ui/label"
 
 
 export default function LoginForm() {
+
+    const navigate = useNavigate()
+    const handleLogin = () => {
+        navigate("/dashboard")
+    }
     return (
         <Card className="w-full max-w-sm">
             <CardHeader>
@@ -32,7 +37,7 @@ export default function LoginForm() {
                 </div>
             </CardContent>
             <CardFooter className="grid gap-1">
-                <Button className="w-full">Sign in</Button>
+                <Button className="w-full" onClick={handleLogin}>Sign in</Button>
                 <div className="mt-4 text-center text-sm">
                     Don't have an account? {" "}
                     <Link to="/signup" className="underline">
