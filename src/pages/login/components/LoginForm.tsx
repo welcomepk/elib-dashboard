@@ -15,10 +15,6 @@ import { useMutation } from "@tanstack/react-query";
 import { login } from "@/http/api";
 import { LoaderCircle } from "lucide-react";
 
-interface LoginFormProps {
-  handleLogin: (email: string, password: string) => void;
-}
-
 interface LoginFormData {
   email: string;
   password: string;
@@ -45,7 +41,8 @@ export default function LoginForm() {
   };
 
   const handleLogin = () => {
-    if (!data.email || !data.password) return;
+    if (!data.email || !data.password)
+      return alert("email and password required!");
     mutation.mutate(data);
   };
 
