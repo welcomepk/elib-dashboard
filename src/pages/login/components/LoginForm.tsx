@@ -10,12 +10,13 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "@/http/api";
 import { LoaderCircle } from "lucide-react";
 import { AxiosError, AxiosResponse } from "axios";
 import useLocalStorage from "@/hooks";
+import { useTokenStore } from "@/store";
 
 interface LoginFormData {
   email: string;
@@ -24,7 +25,8 @@ interface LoginFormData {
 interface LoginErrorResponse extends AxiosError {}
 
 export default function LoginForm() {
-  const [, setToken] = useLocalStorage("jwtToken", "");
+  // const [, setToken] = useLocalStorage("jwtToken", "");
+  const setToken = useTokenStore((state) => state.setToken);
 
   const [data, setData] = useState<LoginFormData>({
     email: "",
