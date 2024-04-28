@@ -10,17 +10,22 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "@/http/api";
 import { LoaderCircle } from "lucide-react";
+import { AxiosError, AxiosResponse } from "axios";
+import useLocalStorage from "@/hooks";
 
 interface LoginFormData {
   email: string;
   password: string;
 }
+interface LoginErrorResponse extends AxiosError {}
 
 export default function LoginForm() {
+  const [, setToken] = useLocalStorage("jwtToken", "");
+
   const [data, setData] = useState<LoginFormData>({
     email: "",
     password: "",
@@ -28,9 +33,13 @@ export default function LoginForm() {
 
   const mutation = useMutation({
     mutationFn: login,
-    onSuccess: (data) => {
+    onSuccess: (data: AxiosResponse) => {
       console.log(data);
+      setToken(data.data.accessToken);
       navigate("/dashboard");
+    },
+    onError: (error: AxiosError<LoginErrorResponse>) => {
+      console.log(error);
     },
   });
 
@@ -40,7 +49,9 @@ export default function LoginForm() {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
-  const handleLogin = () => {
+  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     if (!data.email || !data.password)
       return alert("email and password required!");
     mutation.mutate(data);
@@ -48,53 +59,58 @@ export default function LoginForm() {
 
   return (
     <Card className="w-full max-w-sm">
-      <CardHeader>
+      <CardHeader className="pb-1">
         <CardTitle className="text-2xl">Login</CardTitle>
         <CardDescription>
           Enter your email below to login to your account. <br />
-          {mutation.isError && (
-            <span className="text-sm text-red-500">
-              {mutation.error.message}
-            </span>
-          )}
         </CardDescription>
       </CardHeader>
-      <CardContent className="grid gap-4">
-        <div className="grid gap-2">
-          <Label htmlFor="email">Email</Label>
-          <Input
-            onChange={handleChange}
-            name="email"
-            id="email"
-            type="email"
-            placeholder="m@example.com"
-            required
-          />
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="password">Password</Label>
+      <CardContent>
+        {
+          <span className="text-sm h-6 text-red-500 font-semibold block mb-2">
+            {mutation.isError
+              ? mutation.error.response?.data?.message || mutation.error.message
+              : " "}
+          </span>
+        }
+        <form className="grid gap-4" onSubmit={handleLogin}>
+          <div className="grid gap-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              onChange={handleChange}
+              name="email"
+              id="email"
+              type="email"
+              placeholder="m@example.com"
+              required
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="password">Password</Label>
 
-          <Input
-            onChange={handleChange}
-            name="password"
-            id="password"
-            type="password"
-            required
-          />
-        </div>
+            <Input
+              onChange={handleChange}
+              name="password"
+              id="password"
+              type="password"
+              autoComplete="new-password"
+              required
+            />
+          </div>
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={mutation.isPending}
+          >
+            {mutation.isPending && (
+              <LoaderCircle size={20} className="mr-2 animate-spin" />
+            )}{" "}
+            Sign in
+          </Button>
+        </form>
       </CardContent>
       <CardFooter className="grid gap-1">
-        <Button
-          className="w-full"
-          onClick={handleLogin}
-          disabled={mutation.isPending}
-        >
-          {mutation.isPending && (
-            <LoaderCircle size={20} className="mr-2 animate-spin" />
-          )}{" "}
-          Sign in
-        </Button>
-        <div className="mt-4 text-center text-sm">
+        <div className=" text-center text-sm">
           Don't have an account?{" "}
           <Link to="/auth/signup" className="underline">
             Sign up
