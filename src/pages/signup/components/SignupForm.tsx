@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { register } from "@/http/api";
 import { AxiosError } from "axios";
 import { LoaderCircle } from "lucide-react";
+import { useTokenStore } from "@/store";
 
 interface SignupFormData {
   name: string;
@@ -24,6 +25,8 @@ interface SignupFormData {
 interface SignupErrorResponse extends AxiosError {}
 
 export default function SignupForm() {
+  const setToken = useTokenStore((state) => state.setToken);
+
   const [data, setData] = useState<SignupFormData>({
     name: "",
     email: "",
@@ -34,6 +37,7 @@ export default function SignupForm() {
     mutationFn: register,
     onSuccess: (response) => {
       console.log(response);
+      setToken(response.data.accessToken);
       navigate("/dashboard");
     },
     onError: (error: AxiosError<SignupErrorResponse>) => {
