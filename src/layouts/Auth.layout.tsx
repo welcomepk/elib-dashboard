@@ -1,14 +1,9 @@
-import useLocalStorage from "@/hooks";
-import { useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { useTokenStore } from "@/store";
+import { Outlet, Navigate } from "react-router-dom";
 
 const AuthLayout = () => {
-  const navigate = useNavigate();
-  const [token] = useLocalStorage("jwtToken", "");
-
-  useEffect(() => {
-    if (token) return navigate("/dashboard", { replace: true });
-  }, [token, navigate]);
+  const token = useTokenStore((state) => state.token);
+  if (token) return <Navigate to="/dashboard" replace />;
 
   return (
     <div className="flex h-screen items-center justify-center">

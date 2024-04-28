@@ -38,7 +38,7 @@ export default function SignupForm() {
     onSuccess: (response) => {
       console.log(response);
       setToken(response.data.accessToken);
-      navigate("/dashboard");
+      navigate("/dashboard", { replace: true });
     },
     onError: (error: AxiosError<SignupErrorResponse>) => {
       console.log(error.response?.data.message);

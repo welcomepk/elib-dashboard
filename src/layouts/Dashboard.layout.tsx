@@ -1,4 +1,4 @@
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet, Navigate } from "react-router-dom";
 
 import {
   Bell,
@@ -22,8 +22,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import useLocalStorage from "@/hooks";
-import { useEffect } from "react";
+import { useTokenStore } from "@/store";
 
 const Navbar = () => {
   return (
@@ -63,11 +62,9 @@ const Navbar = () => {
 };
 
 const Header = () => {
-  const [, , removeToken] = useLocalStorage("jwtToken", "");
-  const navigate = useNavigate();
+  const setToken = useTokenStore((state) => state.setToken);
   const handleLogout = () => {
-    removeToken();
-    navigate("/auth/login", { replace: true });
+    setToken(null);
   };
   return (
     <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
@@ -147,14 +144,10 @@ const Header = () => {
 };
 
 export default function DashboardLayout() {
-  const [token, ,] = useLocalStorage("jwtToken", "");
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!token) navigate("/auth/login", { replace: true });
-  }, [token, navigate]);
-
+  const token = useTokenStore((state) => state.token);
+  if (!token) {
+    return <Navigate to="/auth/login" replace />;
+  }
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <Navbar />

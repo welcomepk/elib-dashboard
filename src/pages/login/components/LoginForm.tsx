@@ -15,7 +15,6 @@ import { useMutation } from "@tanstack/react-query";
 import { login } from "@/http/api";
 import { LoaderCircle } from "lucide-react";
 import { AxiosError, AxiosResponse } from "axios";
-import useLocalStorage from "@/hooks";
 import { useTokenStore } from "@/store";
 
 interface LoginFormData {
@@ -25,7 +24,6 @@ interface LoginFormData {
 interface LoginErrorResponse extends AxiosError {}
 
 export default function LoginForm() {
-  // const [, setToken] = useLocalStorage("jwtToken", "");
   const setToken = useTokenStore((state) => state.setToken);
 
   const [data, setData] = useState<LoginFormData>({
@@ -38,7 +36,7 @@ export default function LoginForm() {
     onSuccess: (data: AxiosResponse) => {
       console.log(data);
       setToken(data.data.accessToken);
-      navigate("/dashboard");
+      navigate("/dashboard", { replace: true });
     },
     onError: (error: AxiosError<LoginErrorResponse>) => {
       console.log(error);
