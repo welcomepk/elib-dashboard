@@ -31,9 +31,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { DropdownMenu } from "@/components/ui/dropdown-menu";
-import { LoaderCircle, MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, PlusCircle } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getBooks } from "@/http/api";
+import { Link } from "react-router-dom";
 
 const BooksPage = () => {
   const { data, isLoading, isError, error } = useQuery({
@@ -44,17 +45,29 @@ const BooksPage = () => {
 
   return (
     <div>
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Books</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+      <div className="flex items-center justify-between">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <Link className="hover:text-primary" to="/dashboard">
+                Dashboard
+              </Link>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Books</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        <Link to="create">
+          <Button size={"sm"} className="gap-1.5">
+            <PlusCircle className="h-4 w-4" />
+            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+              Add Book
+            </span>
+          </Button>
+        </Link>
+      </div>
 
       <Card className="mt-5">
         <CardHeader>
