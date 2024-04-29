@@ -22,7 +22,7 @@ interface SignupFormData {
   email: string;
   password: string;
 }
-interface SignupErrorResponse extends AxiosError {}
+interface SignupErrorResponse extends AxiosError { }
 
 export default function SignupForm() {
   const setToken = useTokenStore((state) => state.setToken);
