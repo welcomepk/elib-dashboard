@@ -1,4 +1,4 @@
-import { Link, Outlet, Navigate } from "react-router-dom";
+import { Link, Outlet, Navigate, NavLink } from "react-router-dom";
 
 import {
   Bell,
@@ -40,20 +40,26 @@ const Navbar = () => {
         </div>
         <div className="flex-1">
           <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
-            <Link
-              to="/dashboard"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 bg-muted text-primary transition-all "
+            <NavLink
+              to="/dashboard/home"
+              className={({ isActive }) => {
+                console.log('dashboard', isActive);
+                return `flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground hover:text-primary transition-all ${isActive && 'bg-muted text-primary'}`
+              }}
             >
               <Home className="h-4 w-4" />
               Dashboard
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               to="/dashboard/books"
-              className="flex items-center gap-3 rounded-lg  px-3 py-2 text-muted-foreground  transition-all hover:text-primary"
+              className={({ isActive }) => {
+                console.log('books', isActive);
+                return `flex items-center gap-3 rounded-lg px-3 py-2 hover:text-primary text-muted-foreground transition-all ${isActive && 'bg-muted text-primary'}`
+              }}
             >
               <Package className="h-4 w-4" />
               Books{" "}
-            </Link>
+            </NavLink>
           </nav>
         </div>
       </div>

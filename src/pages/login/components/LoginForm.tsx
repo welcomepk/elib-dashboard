@@ -36,7 +36,7 @@ export default function LoginForm() {
         onSuccess: (data: AxiosResponse) => {
             console.log(data);
             setToken(data.data.accessToken);
-            navigate("/dashboard", { replace: true });
+            navigate("/dashboard/home", { replace: true });
         },
         onError: (error: AxiosError<LoginErrorResponse>) => {
             console.log(error);
